@@ -1,9 +1,9 @@
 ﻿using NetCoreClient.ValueObjects;
 namespace NetCoreClient.Sensors
 {
-    interface ILevelSensorInterface
+    interface IPressioneSensorInterface
     {
-        Level Level();
+        Pressione Pressione();
     }
 
 }

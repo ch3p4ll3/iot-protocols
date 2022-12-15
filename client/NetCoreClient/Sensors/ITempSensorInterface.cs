@@ -1,10 +1,9 @@
 ﻿using NetCoreClient.ValueObjects;
 namespace NetCoreClient.Sensors
 {
-    interface ILevelSensorInterface
+    interface ITempSensorInterface
     {
-        Level Level();
+        Temp Temp();
     }
-
 }
  

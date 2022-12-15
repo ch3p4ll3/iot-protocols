@@ -6,15 +6,17 @@ namespace NetCoreClient.Sensors
     class VirtualLevelSensor : ILevelSensorInterface, ISensorInterface
     {
         private readonly Random Random;
+        private readonly string SensorName;
 
-        public VirtualLevelSensor()
+        public VirtualLevelSensor(string Name)
         {
             Random = new Random();
+            SensorName = Name;
         }
-
-        public int Level()
+        
+        public Level Level()
         {
-            return new Level(Random.Next(100)).Value;
+            return new Level(Random.Next(100), SensorName);
         }
 
         public string ToJson()
