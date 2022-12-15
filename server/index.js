@@ -4,7 +4,7 @@ var {InfluxDB, Point} = require('@influxdata/influxdb-client')
 const url = 'url'
 const token = "token"
 let bucket = `bucket`
-let org = `email`
+let org = `org`
 
 const client = new InfluxDB({url, token})
 
@@ -72,13 +72,11 @@ server.post('/silos/:id', function(req, res, next) {
 
     body = JSON.parse(req.body)
 
-    for (const key in body) {
-        let point = new Point(`silos#${req.params['id']}`)
-            .intField(key, body[key])
+    let point = new Point(`silos#${req.params['id']}`)
+    .intField(body['Name'], body['Value'])
 
-        writeClient.writePoint(point)
-        writeClient.flush()
-    }
+    writeClient.writePoint(point)
+    writeClient.flush() 
 
     res.send('Data received from silos ' + req.params['id']);
 
