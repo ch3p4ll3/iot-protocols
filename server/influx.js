@@ -1,9 +1,10 @@
 var {InfluxDB, Point} = require('@influxdata/influxdb-client')
+require('dotenv').config();
 
-const url = 'url'
-const token = "token"
-let bucket = `bucket`
-let org = `org`
+const url = process.env.URL
+const token = process.env.TOKEN
+const bucket = process.env.BUCKET
+const org = process.env.ORG
 
 const client = new InfluxDB({url, token})
 
