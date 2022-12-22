@@ -1,11 +1,11 @@
 var restify = require('restify');
-var {get_buckets, get_silos, add_silos_data} = require('./influx')
+var {get_silos, get_silos_by_id, add_silos_data} = require('./influx')
 
 var server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
 server.get('/silos', function(req, res, next) {
-    get_buckets().then(function(data){
+    get_silos().then(function(data){
         res.contentType = 'json';
         res.send(data);
         return next();
@@ -16,7 +16,7 @@ server.get('/silos', function(req, res, next) {
 });
 
 server.get('/silos/:id', function(req, res, next) {
-    get_silos(req.params['id']).then(function(data){
+    get_silos_by_id(req.params['id']).then(function(data){
         res.contentType = 'json';
         res.send(data);
         return next();

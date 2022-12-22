@@ -8,7 +8,7 @@ const org = process.env.ORG
 
 const client = new InfluxDB({url, token})
 
-function get_buckets() {
+function get_silos() {
     return new Promise(function(resolve, reject) {
         let queryClient = client.getQueryApi(org)
         let fluxQuery = `
@@ -34,7 +34,7 @@ function get_buckets() {
 }
 
 
-function get_silos(id){
+function get_silos_by_id(id){
     return new Promise(function(resolve, reject){
         let queryClient = client.getQueryApi(org)
         let fluxQuery = `from(bucket: "${bucket}")
@@ -83,6 +83,6 @@ function add_silos_data(id, key, value){
     })
 }
 
-exports.get_buckets = get_buckets
 exports.get_silos = get_silos
+exports.get_silos_by_id = get_silos_by_id
 exports.add_silos_data = add_silos_data
