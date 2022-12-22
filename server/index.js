@@ -1,86 +1,44 @@
 var restify = require('restify');
-var {InfluxDB, Point} = require('@influxdata/influxdb-client')
-
-const url = 'url'
-const token = "token"
-let bucket = `bucket`
-let org = `org`
-
-const client = new InfluxDB({url, token})
+var {get_buckets, get_silos, add_silos_data} = require('./influx')
 
 var server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
 server.get('/silos', function(req, res, next) {
-    let queryClient = client.getQueryApi(org)
-    let fluxQuery = `
-    import "influxdata/influxdb/schema"
-    schema.measurements(bucket: "${bucket}")`
-
-    let data = []
-
-    queryClient.queryRows(fluxQuery, {
-    next: (row, tableMeta) => {
-        const tableObject = tableMeta.toObject(row)
-        let silo_id = tableObject._value.split("#")[1]
-        data.push({"silos": tableObject._value, "ref": "http://localhost:8011/silos/" + silo_id})
-    },
-    error: (error) => {
-        res.send(500, {"error": error});
-        return next();
-    },
-    complete: () => {
+    get_buckets().then(function(data){
         res.contentType = 'json';
         res.send(data);
         return next();
-    },
+    }, function(error){
+        res.send(500, {"error": error});
+        return next();
     })
 });
 
 server.get('/silos/:id', function(req, res, next) {
-    let queryClient = client.getQueryApi(org)
-    let fluxQuery = `from(bucket: "${bucket}")
-    |> range(start: -20m)
-    |> filter(fn: (r) => r._measurement == "silos#${req.params['id']}")
-    |> last()`;
-
-    let data = []
-
-    queryClient.queryRows(fluxQuery, {
-        next: (row, tableMeta) => {
-          const tableObject = tableMeta.toObject(row)
-
-          data.push({
-            "sensor": tableObject._field,
-            "value": tableObject._value,
-            "time": tableObject._time
-          })
-        },
-        error: (error) => {
-            res.send(500, {"error": error});
-            return next();
-        },
-        complete: () => {
-            res.send(data);
-            return next();
-        },
-      })
-});
+    get_silos(req.params['id']).then(function(data){
+        res.contentType = 'json';
+        res.send(data);
+        return next();
+    }, function(error){
+        res.send(500, {"error": error});
+        return next();
+    })
+})
 
 server.post('/silos/:id', function(req, res, next) {
-    let writeClient = client.getWriteApi(org, bucket, 'ns')
+    let id = req.params['id']
+    let body = JSON.parse(req.body)
+    let key = body.Name
+    let value = body.Value
 
-    body = JSON.parse(req.body)
-
-    let point = new Point(`silos#${req.params['id']}`)
-    .intField(body['Name'], body['Value'])
-
-    writeClient.writePoint(point)
-    writeClient.flush() 
-
-    res.send('Data received from silos ' + req.params['id']);
-
-    return next();
+    add_silos_data(id, key, value).then(function(data){
+        res.send('Data received from silos ' + id);
+        return next();
+    }, function(error){
+        res.send(500, {"error": error});
+        return next();
+    })
 });
 
 server.listen(8011, function() {
