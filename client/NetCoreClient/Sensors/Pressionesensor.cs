@@ -29,5 +29,9 @@ namespace NetCoreClient.Sensors
         {
             return JsonSerializer.Serialize(Pressione());
         }
+        public string GetSlug()
+        {
+            return "Pressione";
+        }
     }
 }

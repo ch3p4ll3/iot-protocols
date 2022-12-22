@@ -8,7 +8,7 @@ sensors.Add(new Temperaturesensor("Sensoretemperatura"));
 sensors.Add(new Pressionesensor("Sensorepressione"));
 
 // define protocol
-ProtocolInterface protocol = new Http("http://10.0.20.30:8011/silos/123");
+ProtocolInterface protocol = new Mqtt("10.0.20.30");
 
 // send data to server
 while (true)
@@ -17,7 +17,7 @@ while (true)
     {
         var sensorValue = sensor.ToJson();
 
-        protocol.Send(sensorValue);
+        protocol.Send(sensorValue, sensor.GetSlug());
 
         Console.WriteLine("Data sent: " + sensorValue);
 

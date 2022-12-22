@@ -29,5 +29,9 @@ namespace NetCoreClient.Sensors
         {
             return JsonSerializer.Serialize(Temp());
         }
+        public string GetSlug()
+        {
+            return "Temperatura";
+        }
     }
 }
