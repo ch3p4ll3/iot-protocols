@@ -8,7 +8,7 @@ sensors.Add(new Temperaturesensor("Sensoretemperatura"));
 sensors.Add(new Pressionesensor("Sensorepressione"));
 
 // define protocol
-ProtocolInterface protocol = new Mqtt("10.0.20.30");
+ProtocolInterface protocol = new Amqt("10.8.128.4");
 
 // send data to server
 while (true)

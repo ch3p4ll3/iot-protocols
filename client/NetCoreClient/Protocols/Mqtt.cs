@@ -25,7 +25,7 @@ namespace NetCoreClient.Protocols
                 .Build();
 
             mqttClient = factory.CreateMqttClient();
-
+           
             return await mqttClient.ConnectAsync(options, CancellationToken.None);
         }
 
@@ -39,6 +39,15 @@ namespace NetCoreClient.Protocols
 
             await mqttClient.PublishAsync(message, CancellationToken.None);
         }
-
+        public async Task SubscribeAsync(string topic, int qos = 1)
+        {
+            await mqttClient.SubscribeAsync(new MqttTopicFilterBuilder()
+            .WithTopic(topic)
+            .Build());
+            
+        }
+        
     }
+
+    
 }
