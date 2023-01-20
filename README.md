@@ -7,6 +7,9 @@
     - [Value](#value)
     - [Name](#name)
 - [Topic](#topic)
+- [Sicurezza](#sicurezza)
+    - [Authentication](#authentication)
+    - [Authorization](#authorization)
 - [InfluxDB](#influxdb)
 
 ## Funzionamento
@@ -39,6 +42,15 @@ Gestione dei topic per il progetto:
 `silos/id_silos/tipo_sensore`
 
 In questo modo è possibile poi categorizzare le misurazioni per silos e per tipo di sensore
+
+## Sicurezza
+### Authentication
+Per evitare che chiunque possa accedere ai messaggi è possibile implementare un'autenticazione. Se il client è abbastanza potente da permettere la gestione dei certificati si può utilizzare un'autenticazione utilizzando dei certificati. Altrimenti si può utilizzare un'autenticazione a "username & password".
+
+Come ultima spiaggia, se non è possibile per qualsiasi motivo implementare un'autenticazione, è sempre possibile criptare il payload con un algoritmo.
+
+### Authorization
+Ogni client ha l'autorizzazione a pubblicare solo nella sua area di competenza(es. il sensore con id 1 potrà pubblicare solo nel topic `silos/1/#`)
 
 ## InfluxDB
 InfluxDB è un database timeseries, questo ci permette di salvare dati temporali più efficentemente rispetto ad un database relazionale. 

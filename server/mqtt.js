@@ -1,6 +1,6 @@
 const mqtt = require('mqtt')
 const client  = mqtt.connect('mqtt://localhost')
-var {add_silos_data} = require('./influx')
+var { add_silos_data } = require('./influx')
 
 client.on('connect', function () {
     console.log("Connesso");
